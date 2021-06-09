@@ -1,13 +1,5 @@
-# MISPhyl (Mutual Information Supermatrix Phylogenomics) Pipeline
-A phylogenomics pipeline which reconstructs tree based on the single core orthologous genes (SCG) / proteins (SCP) from each sample with the utilization of mutual information to select the phylogenetically optimal genes.
-
-## CITATION
-1. Alexey M Kozlov, Diego Darriba, Tomáš Flouri, Benoit Morel, Alexandros Stamatakis, RAxML-NG: a fast, scalable and user-friendly tool for maximum likelihood phylogenetic inference, Bioinformatics, Volume 35, Issue 21, 1 November 2019, Pages 4453–4455
-2. Darriba, D., Posada, D., Kozlov, A. M., Stamatakis, A., Morel, B., & Flouri, T. (2020). ModelTest-NG: a new and scalable tool for the selection of DNA and protein evolutionary models. Molecular Biology and Evolution, 37(1), 291-294. doi.org/10.1093/molbev/msz189
-3. Flouri T., Izquierdo-Carrasco F., Darriba D., Aberer AJ, Nguyen LT, Minh BQ, von Haeseler A., Stamatakis A. (2014) The Phylogenetic Likelihood Library. Systematic Biology, 64(2): 356-362. doi:10.1093/sysbio/syu084
-4. Kazutaka Katoh, Kazuharu Misawa, Kei‐ichi Kuma, Takashi Miyata, MAFFT: a novel method for rapid multiple sequence alignment based on fast Fourier transform, Nucleic Acids Research, Volume 30, Issue 14, 15 July 2002, Pages 3059–3066
-5. Lechner et al (2011). Proteinortho: Detection of (Co-)Orthologs in Large-Scale Analysis. BMC Bioinformatics 2011 Apr 28;12(1):124.
-6. Tan, J.L., Khang, T.F., Ngeow, Y.F. et al. A phylogenomic approach to bacterial subspecies classification: proof of concept in Mycobacterium abscessus. BMC Genomics 14, 879 (2013). https://doi.org/10.1186/1471-2164-14-879
+# MISPhyl (Mutual Information Supermatrix Phylogenomic) Pipeline
+Reconstructs Phylogenomics Tree based on Mutual Information Evaluated Phylogenetics Signals From Genomes Derived Orthologous Sets
 
 # Table of Contents
 * [Software and Script](#software-and-script)
@@ -207,3 +199,11 @@ a) Run step 4 with input file MSA.fa, nucleotide, output files prefix "tree1", 2
 
 ### STEP 4 FOLDER:
 8.treeConstruction
+
+## References
+1. Alexey M Kozlov, Diego Darriba, Tomáš Flouri, Benoit Morel, Alexandros Stamatakis, RAxML-NG: a fast, scalable and user-friendly tool for maximum likelihood phylogenetic inference, Bioinformatics, Volume 35, Issue 21, 1 November 2019, Pages 4453–4455
+2. Darriba, D., Posada, D., Kozlov, A. M., Stamatakis, A., Morel, B., & Flouri, T. (2020). ModelTest-NG: a new and scalable tool for the selection of DNA and protein evolutionary models. Molecular Biology and Evolution, 37(1), 291-294. doi.org/10.1093/molbev/msz189
+3. Flouri T., Izquierdo-Carrasco F., Darriba D., Aberer AJ, Nguyen LT, Minh BQ, von Haeseler A., Stamatakis A. (2014) The Phylogenetic Likelihood Library. Systematic Biology, 64(2): 356-362. doi:10.1093/sysbio/syu084
+4. Kazutaka Katoh, Kazuharu Misawa, Kei‐ichi Kuma, Takashi Miyata, MAFFT: a novel method for rapid multiple sequence alignment based on fast Fourier transform, Nucleic Acids Research, Volume 30, Issue 14, 15 July 2002, Pages 3059–3066
+5. Lechner et al (2011). Proteinortho: Detection of (Co-)Orthologs in Large-Scale Analysis. BMC Bioinformatics 2011 Apr 28;12(1):124.
+6. Tan, J.L., Khang, T.F., Ngeow, Y.F. et al. A phylogenomic approach to bacterial subspecies classification: proof of concept in Mycobacterium abscessus. BMC Genomics 14, 879 (2013). https://doi.org/10.1186/1471-2164-14-879
