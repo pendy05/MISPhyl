@@ -1,8 +1,5 @@
-# MISPhyl
-Mutual Information Supermatrix Phylogenomic Tree
-Phylogenomics pipeline reconstructs phylogenetic tree based on the single core orthologous genes (SCG) / proteins (SCP) from each sample.
-Utilizing mutual information to select phylogenetically optimal genes.
-It is to determine the evolutionary relationship between each sample.
+# MISPhyl (Mutual Information Supermatrix Phylogenomic Tree)
+A phylogenomics pipeline which reconstructs tree based on the single core orthologous genes (SCG) / proteins (SCP) from each sample with the utilization of mutual information to select the phylogenetically optimal genes.
 
 ## CITATION
 1. Alexey M Kozlov, Diego Darriba, Tomáš Flouri, Benoit Morel, Alexandros Stamatakis, RAxML-NG: a fast, scalable and user-friendly tool for maximum likelihood phylogenetic inference, Bioinformatics, Volume 35, Issue 21, 1 November 2019, Pages 4453–4455
@@ -17,7 +14,7 @@ It is to determine the evolutionary relationship between each sample.
 * [Prerequisites](#prerequisites)
 * [Getting Started](#getting-started)
 * [Options](#options)
-* [Output Files](#output-files)
+* [Main Output Folders](#main-output-folders)
 
 ## Software and Script
 All the dependencies needed for the script are included within the tarball file. 
@@ -193,7 +190,7 @@ a) Run step 4 with input file MSA.fa, nucleotide, output files prefix "tree1", 2
      		
 
 
-## Output Folders / Files that User may more concerned about
+## Main Output Folders
 
 ### STEP 1 FOLDERS:
 1.orthologFamily: core orthologous proteins/genes
@@ -205,8 +202,8 @@ a) Run step 4 with input file MSA.fa, nucleotide, output files prefix "tree1", 2
 
 ### STEP 3 FILES:
 5.MSA.fa
-6.MI_genes.csv: Mutual Information file
-7.partition.txt
+<br>6.MI_genes.csv: Mutual Information file
+<br>7.partition.txt
 
 ### STEP 4 FOLDER:
 8.treeConstruction
