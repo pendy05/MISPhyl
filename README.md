@@ -1,4 +1,4 @@
-# MISPhyl (Mutual Information Supermatrix Phylogenomics Pipeline)
+# MISPhyl (Mutual Information Supermatrix Phylogenomics) Pipeline
 A phylogenomics pipeline which reconstructs tree based on the single core orthologous genes (SCG) / proteins (SCP) from each sample with the utilization of mutual information to select the phylogenetically optimal genes.
 
 ## CITATION
