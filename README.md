@@ -108,12 +108,11 @@ a)Run step 1 with quiet mode ON and prefix for proteinortho as "project1"
 ```
 3.Slight difference if codon based alignment is ENABLED, ENSURE:
 <br>  i) Same IDs are used in both protein and nucleotide input files
-|    Example   |          Protein           |  		   	Nucleotide				     | 
-|:------------:|:--------------------------:|:------------------------------:|
-|       1      |>H.sapiens_ACE1180<br>ACDACDACD       |	>H.sapiens_ACE1180 |
-|              |		                |	GCUUGUGAUGCUUGUGAUGCUUGUGAU|
-|              |>H.sapiens_ACD12739	        |	>H.sapiens_ACD12739|
-|              |ACDDCACDDC		              |	GCUUGUGAUGAUUGUGCUUGUGAUGAUUGU
+|    Example Condition   |          Protein           |  		   	Nucleotide				     | 
+|:------------:|:---------------------------|:-------------------------------|
+|      Same ID      |>H.sapiens_ACE1180<br>ACDACDACD<br>>H.sapiens_ACD12739<br>ACDDCACDDC       |	>H.sapiens_ACE1180<br>GCUUGUGAUGCUUGUGAUGCUUGUGAU<br>>H.sapiens_ACD12739<br>GCUUGUGAUGAUUGUGCUUGUGAUGAUUGU |
+|       Same Tag    |>H.sapiens_ACE80_1<br>ACDACDACD<br>>H.sapiens_ACD12739_2<br>ACDDCACDDC |>H.sapiens_ACE1180_1<br>GCUUGUGAUGCUUGUGAUGCUUGUGAU<br>><br>H.sapiens_ACDS2_2<br>GCUUGUGAUGAUUGUGCUUGUGAUGAUUGU	|
+
 
 <br>  ii) amino acid files in main directory inputfolder/ whereas nucleotide files in directory ntfolder/ .
 <br>  iii) RUN step 1 with codon alignment ENABLED will automatically finish up until the step 2, MSA.
