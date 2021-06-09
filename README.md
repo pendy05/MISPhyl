@@ -75,19 +75,19 @@ Ensure there is NO '_', underscore in your species name and accession ID.
 2.Put the files in folder inputfolder/. 
 3.In your current directory, run the pipeline script. Eg:
 ```
-	python3 pipeline.py [option]
+	python3 MISPhyl.py [option]
 ```
   a) Run in default mode which accepts input files as amino acid sequence and utilize Diamond as blast program
 ```
-	$python3 pipeline.py -e faa -f aa
+	$python3 MISPhyl.py -e faa -f aa
 ```
   b) Run with nucleotide input files, blastn program and mutual information mode ON (ensure blastn is present in your system)
 ```	
-	$python3 pipeline.py -e fna -f nt -d blastn -u
+	$python3 MISPhyl.py -e fna -f nt -d blastn -u
 ```
   c) Run codon-based alignment with mutal information mode ON. Amino acid files with .faa file extension in inputfolder/ and nucleotide files in ntfolder/.
 ```
-	$python3 pipeline.py -o -u -f aa -e faa
+	$python3 MISPhyl.py -o -u -f aa -e faa
 ```
 
 Note: Codon Alignment (AA and corresponding NT files MUST have same filename, file extension need not to be)
@@ -101,7 +101,7 @@ Note: Codon Alignment (AA and corresponding NT files MUST have same filename, fi
 Example:<br>
 a)Run step 1 with quiet mode ON and prefix for proteinortho as "project1"
 ```
-	$python3 pipeline.py -s 1 -q -p project1 -e fa -f aa
+	$python3 MISPhyl.py -s 1 -q -p project1 -e fa -f aa
 ```
 3.Slight difference if codon based alignment is ENABLED, ENSURE:
 <br>  i) Same IDs are used in both protein and nucleotide input files
@@ -116,11 +116,11 @@ a)Run step 1 with quiet mode ON and prefix for proteinortho as "project1"
 <br>Example:
 <br>a) Run all steps with codon alignment, mutual information mode ON.
 ```
-	$python3 pipeline.py -e fasta -f aa -u -o -c 4
+	$python3 MISPhyl.py -e fasta -f aa -u -o -c 4
 ```
 <br>a) Run step 1 to step 2 with codon alignment, mutual information mode ON
 ```
-	$python3 pipeline.py -e fasta -f aa -u -o -c 4 -s 1
+	$python3 MISPhyl.py -e fasta -f aa -u -o -c 4 -s 1
 ```
 
 
@@ -133,7 +133,7 @@ a)Run step 1 with quiet mode ON and prefix for proteinortho as "project1"
 3.Example:
 <br>a) Run step 2 with mafft program
 ```
-	$python3 pipeline.py -s 2
+	$python3 MISPhyl.py -s 2
 ```
 
 
@@ -146,11 +146,11 @@ a)Run step 1 with quiet mode ON and prefix for proteinortho as "project1"
 3.Example:
 a) Mutual information mode ON with 10 median ranked genes and a aligned output file named aligned.fa 
 ```
-	$python3 pipeline.py -s 3 -u -n aligned.fa -t 10
+	$python3 MISPhyl.py -s 3 -u -n aligned.fa -t 10
 ```
 b) Step 3 with codon alignment and mutual information mode ON
 ```
-	$python3 pipeline.py -s 3 -u -o
+	$python3 MISPhyl.py -s 3 -u -o
 ```
 
 
@@ -161,7 +161,7 @@ If you run all the steps from 1 to 4, you need not to worry for this. Partition.
 3. Example:<br>
 a) Run step 4 with input file MSA.fa, nucleotide, output files prefix "tree1", 2 cpus, boostrapping of 250 and a partition file named "partition.txt".
 	```
-	$python3 pipeline.py -s 4 -r tree1 -c 2 -b 250 -n MSA.fa -f nt -o partition.txt
+	$python3 MISPhyl.py -s 4 -r tree1 -c 2 -b 250 -n MSA.fa -f nt -o partition.txt
 	```
 
 
