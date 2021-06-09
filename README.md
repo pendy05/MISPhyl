@@ -203,10 +203,10 @@ a) Run step 4 with input file MSA.fa, nucleotide, output files prefix "tree1", 2
 ### STEP 2 FOLDER:
 4.msa: multiple sequence alignment
 
-STEP 3 FILES:
+### STEP 3 FILES:
 5.MSA.fa
 6.MI_genes.csv: Mutual Information file
 7.partition.txt
 
-STEP 4 FOLDER:
+### STEP 4 FOLDER:
 8.treeConstruction
