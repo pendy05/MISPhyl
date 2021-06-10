@@ -71,15 +71,15 @@ Ensure there is NO '_', underscore in your species name and accession ID.
 ```
   a) Run in default mode which accepts input files as amino acid sequence and utilize Diamond as blast program
 ```
-	$python3 MISPhyl.py -e faa -f aa
+	$python3 MISPhyl.py -e faa -f aa -u
 ```
   b) Run with nucleotide input files, blastn program and mutual information mode ON (ensure blastn is present in your system)
 ```	
-	$python3 MISPhyl.py -e fna -f nt -d blastn -u
+	$python3 MISPhyl.py -e fna -f nt -d blastn
 ```
   c) Run codon-based alignment with mutal information mode ON. Amino acid files with .faa file extension in inputfolder/ and nucleotide files in ntfolder/.
 ```
-	$python3 MISPhyl.py -o -u -f aa -e faa
+	$python3 MISPhyl.py -o -f aa -e faa
 ```
 
 Note: Codon Alignment (AA and corresponding NT files MUST have same filename, file extension need not to be)
@@ -93,7 +93,7 @@ Note: Codon Alignment (AA and corresponding NT files MUST have same filename, fi
 Example:<br>
 a)Run step 1 with quiet mode ON and prefix for proteinortho as "project1"
 ```
-	$python3 MISPhyl.py -s 1 -q -p project1 -e fa -f aa
+	$python3 MISPhyl.py -s 1 -q -p project1 -e fa -f aa -u
 ```
 3.Slight difference if codon based alignment is ENABLED, ENSURE:
 <br>  i) Same IDs are used in both protein and nucleotide input files
@@ -108,11 +108,11 @@ a)Run step 1 with quiet mode ON and prefix for proteinortho as "project1"
 <br>Example:
 <br>a) Run all steps with codon alignment, mutual information mode ON.
 ```
-	$python3 MISPhyl.py -e fasta -f aa -u -o -c 4
+	$python3 MISPhyl.py -e fasta -f aa -o -c 4
 ```
 <br>a) Run step 1 to step 2 with codon alignment, mutual information mode ON
 ```
-	$python3 MISPhyl.py -e fasta -f aa -u -o -c 4 -s 1
+	$python3 MISPhyl.py -e fasta -f aa -o -c 4 -s 1
 ```
 
 
@@ -142,7 +142,7 @@ a) Mutual information mode ON with 10 median ranked genes and a aligned output f
 ```
 b) Step 3 with codon alignment and mutual information mode ON
 ```
-	$python3 MISPhyl.py -s 3 -u -o
+	$python3 MISPhyl.py -s 3 -o
 ```
 
 
@@ -166,7 +166,7 @@ a) Run step 4 with input file MSA.fa, nucleotide, output files prefix "tree1", 2
 |-c             | int	                       |-1 <br>(all available)	 					| number of cpu / threads to be utilized   				|
 |-e             | string                       |faa 	 				 					| input file extension {fasta,faa,fna,fa}   			|
 |-f             | string                       |N/A 	 				 					| type of input sequences {protein:aa / nucleotide:nt}	|
-|-u             | N/A                          |OFF		 				 					| mutual information : select phylogenetically optimal genes for phylogenetic interference	    |
+|-u             | N/A                          |ON		 				 					| mutual information : select optimal phylogenetical signal genes for phylogenomic interference	    |
 |-t             | int	                       |myproject	 	 		 					| prefix for proteinOrtho resulting file names   		|
 |-p             | string                       |faa 	 				 					| input file extension {fasta,faa,fna,fa}   			|
 |-d             | string                       |protein [diamond]<br> nucleotide [blastn] 	| blast program available for proteinOrtho 				|
