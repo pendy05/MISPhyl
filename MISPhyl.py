@@ -350,7 +350,7 @@ def concatenation():
 		if os.stat("%s%s"%(filelocation,i)).st_size == 0:
 			os.system("rm %s%s"%(filelocation,i))
 
-	if args.mutualinfo and os.path.exists(filelocation): #mutual information mode ON
+	if args.mutualinfo and os.path.exists(filelocation) and args.inputtype == "nt": #mutual information mode ON
         #run Rscript MI
 		command = "Rscript"
 		path2script = "./dependencies/MutualInfo.R"
@@ -445,7 +445,7 @@ def concatenation():
 		for header, seq in table.items():
 			outfile.write(">"+header+'\n'+seq+'\n')
 
-	if args.mutualinfo:
+	if args.mutualinfo and args.inputtype == "nt":
 		print("\nMutual Information and Concatenation done.")
 		print("Output files %s can be found in current directory.\n"%args.MSAout)
 	else:
