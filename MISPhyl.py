@@ -81,7 +81,7 @@ parser.add_argument("-a", type=int, action="store", dest="mafftmaxiteration",
 
 #mutualInformation
 parser.add_argument("-u", help="select phylogenetically optimal genes for phylogenetic interference based on mutual information\
-                         ,ONLY available for nucleotide (default:OFF)", action="store_true", dest="mutualinfo")
+                         ,ONLY available for nucleotide (default:ON)", action="store_false", dest="mutualinfo")
 parser.add_argument("-t", type=int, action="store",dest="medianrange",
 			default=50, help="number of median-ranked range genes in MI_genes.csv to be concatenated")
 
