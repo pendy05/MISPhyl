@@ -350,7 +350,10 @@ def concatenation():
 		if os.stat("%s%s"%(filelocation,i)).st_size == 0:
 			os.system("rm %s%s"%(filelocation,i))
 
-	if args.mutualinfo and os.path.exists(filelocation) and args.inputtype == "nt": #mutual information mode ON
+	if len(os.listdir(filelocation)) == 0:
+		sys.exit("ERROR: No file in directory %"&(filelocation))
+		
+	if (args.mutualinfo and args.inputtype == "nt" and filelocation == "./msa/") or (args.mutualinfo and args.codon and filelocation == "./codonAlignment/"): #mutual information mode ON
         #run Rscript MI
 		command = "Rscript"
 		path2script = "./dependencies/MutualInfo.R"
@@ -435,7 +438,7 @@ def concatenation():
 						partfile.write(args.inputtype+", "+partitionName+"="+str(pos+1)+"-"+str(endpos+pos)+"\n")#write to partition file
 						pos = endpos+pos
 		else:
-			print("ERROR: Input directory \"msa\" is NOT FOUND in current directory.\n")
+			print("ERROR: Input directory \"%s\" is NOT FOUND in current directory.\n"%(filelocation))
 			sys.exit()
 
 	if os.path.isfile("%s" % (args.MSAout)):
