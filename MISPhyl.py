@@ -18,7 +18,7 @@ import sys
 import subprocess
 import math
 import textwrap
-import time
+
 parser = argparse.ArgumentParser(prog='PROG',
 				formatter_class=argparse.RawDescriptionHelpFormatter,
 				description=textwrap.dedent('''\
