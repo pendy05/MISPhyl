@@ -185,20 +185,20 @@ a) Run step 4 with input file MSA.fa, nucleotide, output files prefix "tree1", 2
 
 ## Main Output Folders
 
-### STEP 1 FOLDERS:
+### Step 1 Folders:
 1.orthologFamily: core orthologous proteins/genes
-2.nt_orthologFamily: corresponding core orthologous nucleotides (codon alignment)
-3.codonAlignment: codon aligned nucleotides
+<br>2.nt_orthologFamily: corresponding core orthologous nucleotides (codon alignment)
+<br>3.codonAlignment: codon aligned nucleotides
 
-### STEP 2 FOLDER:
+### Step 2 Folder:
 4.msa: multiple sequence alignment
 
-### STEP 3 FILES:
+### Step 3 Files:
 5.MSA.fa
 <br>6.MI_genes.csv: Mutual Information file
 <br>7.partition.txt
 
-### STEP 4 FOLDER:
+### Step 4 Folder:
 8.treeConstruction
 
 ## References
