@@ -55,7 +55,8 @@ Ensure there is NO '_', underscore in your species name and accession ID.
 
 3.For codon based alignment, ENSURE:<br>
 <br>  a) Same IDs are used in both protein and nucleotide input files
-<br>  b) amino acid files in main directory inputfolder/ whereas nucleotide files in directory ntfolder/ .
+<br>  b) Amino acid files in main directory inputfolder/ whereas nucleotide files in directory ntfolder/ .
+<br>  c) Value for option -f is set to "aa".
 
 
 
