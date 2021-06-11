@@ -83,7 +83,7 @@ parser.add_argument("-a", type=int, action="store", dest="mafftmaxiteration",
 parser.add_argument("-u", help="select phylogenetically optimal genes for phylogenetic interference based on mutual information\
                          ,ONLY available for nucleotide (default:ON)", action="store_false", dest="mutualinfo")
 parser.add_argument("-t", type=int, action="store",dest="medianrange",
-			default=50, help="number of median-ranked range genes in MI_genes.csv to be concatenated")
+			default=50, help="number of median-ranked range genes in MI_genes.csv to be concatenated (default:50)")
 
 
 #concatenation
@@ -191,13 +191,12 @@ def proteinextraction():
 			os.system("mv coreSCP*  %s* orthologFamily/" %args.name)
 			print("\nSingle Core Orthologous Genes/Protein Extraction done.")
 			print("Output files could be found in directory orthologFamily/ .\n")
-		
+		print("\nCore Orthologous Protein / Gene Extraction Done\n")
 		if args.codon:
 			codonAlignment()
 			
 	else:
 		sys.exit("\nERROR:File \"%s.proteinortho.tsv\" is NOT EXISTED in current directory \"%s\"\n" %(args.name, os.getcwd()))
-	print("\nCore Orthologous Protein / Gene Extraction Done\n")
 
 
 '''
@@ -226,9 +225,10 @@ def msa():
 		os.system("mv aligned* msa/")
 		print("\nMultiple Sequence Alignment done.")
 		print("Output files could be found in directory msa/ .\n")
+		print("\nMultiple Sequence Alignment Done\n")
 	else:
 		sys.exit("ERROR: Input directory \"orthologFamily\" is NOT FOUND in current directory.\n For MSA, please ensure this directory, \"orthologFamily\" is created with input files located inside.")
-	print("\nMultiple Sequence Alignment Done\n")
+	
 
 def codonAlignment():
 	print("\nSTEP 1.5: Codon Alignment\n")
@@ -342,7 +342,9 @@ def concatenation():
 	pos, endpos = 0,0
 	partition=""
 	filelocation = "./msa/"
-
+	if not args.inputtype:
+		sys.exit("ERROR: Please select the sequence type, nt or aa.\n")
+		
 	if args.codon:
 		filelocation="./codonAlignment/"
 
@@ -470,11 +472,15 @@ def treeconstruction():
 				os.system("./dependencies/modeltest-ng-static -i %s -d nt -p %s -T raxml -o %s -q %s"%(args.MSAout, args.cpus, args.modeltestPrefix, args.partition))
 			else:
 				os.system("./dependencies/modeltest-ng-static -i %s -d %s -p %s -T raxml -o %s -q %s"%(args.MSAout,args.inputtype, args.cpus, args.modeltestPrefix, args.partition))
-			fl=args.modeltestPrefix+".part."+args.subsModel	
-			try:	
-				os.system("./dependencies/raxml-ng %s --all --msa %s --model %s --prefix %s --bs-trees %s" % (cmd3, args.MSAout, fl, args.prefix, args.bootstrap))
-			except:
-				sys.exit("ERROR: Refer log file of RAxML-NG for more details.")
+			if os.path.isfile(fl):	
+				try:	
+					os.system("./dependencies/raxml-ng %s --all --msa %s --model %s --prefix %s --bs-trees %s" % (cmd3, args.MSAout, fl, args.prefix, args.bootstrap))
+				except:
+					sys.exit("ERROR: Refer log file of RAxML-NG for more details.")
+			elif args.inputtype == "nt":
+				os.system("./dependencies/raxml-ng %s --all --msa %s --model GTR+G --prefix %s --bs-trees %s" % (cmd3, args.MSAout, args.prefix, args.bootstrap))
+			elif args.inputtype == "aa":
+				os.system("./dependencies/raxml-ng %s --all --msa %s --model LG+G8+F --prefix %s --bs-trees %s" % (cmd3, args.MSAout, args.prefix, args.bootstrap))	
 
 		else:
 			#os.system("./dependencies/modeltest-ng-static -i %s -d %s -p %s -T raxml -o %s -q %s"%(args.MSAout,args.inputtype, args.cpus, args.modeltestPrefix, args.partition))
