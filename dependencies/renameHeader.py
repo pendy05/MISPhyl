@@ -20,7 +20,7 @@ args = parser.parse_args()
 
 def singleCPU(filelist, headerlist):
 	for filename, header in zip(filelist, headerlist):
-    with open(filename,"r+") as fasta_file:
+		with open(filename,"r+") as fasta_file:
 			count=0
 			content=""
 			print("Header [", header, "] added to file: ", fasta_file)
