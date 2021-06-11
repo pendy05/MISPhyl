@@ -360,7 +360,6 @@ def concatenation():
 		command = "Rscript"
 		path2script = "./dependencies/MutualInfo.R"
 		cmd = [command, path2script, filelocation, str(args.cpus)]
-		print(cmd)
 		try:
 			x = subprocess.check_output(cmd,universal_newlines=True)
 		except:
