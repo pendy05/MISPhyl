@@ -517,30 +517,31 @@ def treeconstruction():
 
 #program starts here
 #step selection
-if args.step == 0 and args.codon: #all steps are chosen with codon alignment
-	proteinextraction()
-	concatenation()
-	treeconstruction()
+if __name__ == "__main__":
+	if args.step == 0 and args.codon: #all steps are chosen with codon alignment
+		proteinextraction()
+		concatenation()
+		treeconstruction()
 
-elif args.step == 0:
-	proteinextraction()
-	msa()
-	concatenation()
-	treeconstruction()
+	elif args.step == 0:
+		proteinextraction()
+		msa()
+		concatenation()
+		treeconstruction()
 
-elif args.step == 1: #step 1: single core orthologous nucleotide / proteine extraction
-	proteinextraction()
+	elif args.step == 1: #step 1: single core orthologous nucleotide / proteine extraction
+		proteinextraction()
 
-elif args.step == 2: #step 2: multiple sequence alignment
-	msa()
+	elif args.step == 2: #step 2: multiple sequence alignment
+		msa()
 
-elif args.step == 3: #step 3: mutual information (default OFF) & concatenation
-	concatenation() 
+	elif args.step == 3: #step 3: mutual information (default OFF) & concatenation
+		concatenation() 
 
-elif args.step == 4: #step 4: tree construction
-	treeconstruction()
+	elif args.step == 4: #step 4: tree construction
+		treeconstruction()
 
-else:
-	sys.exit("ERROR: select the step to be done or leave the option as 0 (default) to run all. \n[0:all, 1:proteinortho, 2:msa (mafft), 3:mutual information(optional) & concatenation, 4:tree cosntruction (raxml-ng) ]")
+	else:
+		sys.exit("ERROR: select the step to be done or leave the option as 0 (default) to run all. \n[0:all, 1:proteinortho, 2:msa (mafft), 3:mutual information(optional) & concatenation, 4:tree cosntruction (raxml-ng) ]")
 
-    
+
