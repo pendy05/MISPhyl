@@ -49,7 +49,7 @@ def removeInvalidCharCPUs(filename):
 			print("File ", filename," has ", num ," sequences being removed. ")
 		print("\nYou may find these removed sequences in ", args.outfile)
 	except:
-		print(filename+ "Not successful")
+		print(filename+ " Not successful")
 		logging.warning(filename + " Not complete")
 
 def removeInvalidChar():
@@ -86,16 +86,15 @@ def removeInvalidChar():
 	except:
 		print("ERROR: Check your files.")
 
+character=["ATCG","ACDEFGHIKLMNPQRSTVWY"]
+validchar =""
+if args.inputtype == "nt":
+	validchar = character[0]
+elif args.inputtype == "aa":
+	validchar = character[1]
+	
 if __name__ == "__main__":
 
-	character=["ATCG","ACDEFGHIKLMNPQRSTVWY"]
-	validchar =""
-	if args.inputtype == "nt":
-		validchar = character[0]
-	elif args.inputtype == "aa":
-		validchar = character[1]
-
-	print(validchar)
 	cpu_available = os.cpu_count()
 	if args.cpus > cpu_available:
 		sys.exit("\nERROR: Maximum number of CPU available in your device is %s. \nERROR: You picked %s cpus!!" % (cpu_available,args.cpus))
