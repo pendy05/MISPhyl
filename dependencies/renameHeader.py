@@ -23,7 +23,7 @@ def singleCPU(filelist, headerlist):
 		with open(filename,"r+") as fasta_file:
 			count=0
 			content=""
-			print("Header [", header, "] added to file: ", fasta_file)
+			print("Header [", header, "] added to file: ", filename)
 
 			for record in SeqIO.parse(fasta_file,"fasta"):
 				seq = str(record.seq)
@@ -42,7 +42,7 @@ def multiCPUs(filename, header):
 	with open(filename,"r+") as fasta_file:
 		count=0
 		content=""
-		print("Header [", header, "] added to file: ", fasta_file)
+		print("Header [", header, "] added to file: ", filename)
 
 		for record in SeqIO.parse(fasta_file,"fasta"):
 			seq = str(record.seq)
