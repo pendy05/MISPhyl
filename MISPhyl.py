@@ -56,6 +56,7 @@ parser.add_argument("-s", type=int, action="store",dest="step", default=0,
 			choices=[0,1,2,3,4], help="step to be done [default:0]\
 			0 = all ; 1 = proteinortho (protein extraction); 2 = mafft (multiple sequence alignment) ; 3 = mutual information & concatenation ,4 = raxml-ng (tree construction)")
 parser.add_argument("-q", help="Do not show progress message", action="store_true", dest="quiet")
+parser.add_argument("-w", help="Have minimum of four input files; required for tree construction (DEFAULT:ON)", action="store_true", dest="limit")
 parser.add_argument("-c", type=int, action="store", dest="cpus",
 			default=-1,help="number of cpu threads to be utilized [default: all available]")
 
@@ -148,8 +149,8 @@ def proteinextraction():
 	
 	MAX= len(glob.glob1("./inputfolder/","*.%s" %(args.fileextension))) #count number of . sample file in current directory
 	if args.step == 0:
-		if MAX < 4: #must have >= 4 samples
-			sys.exit("\nERROR: Less than 4 files with .%s extension being detected.\n" %(args.fileextension))
+		if MAX < 4 and args.limit != True: #must have >= 4 samples
+			sys.exit("\nERROR: Less than 4 files with .%s extension being detected. Minimum of 4 input files are required for the tree construction. \nIf you would like to disable this feature for step 1 in all-in-one step, please include \"-w\" in your command line." %(args.fileextension))
 	
 	if args.blastprogram == "diamond":#default blast program
 		if args.inputtype == "nt":
@@ -518,6 +519,9 @@ def treeconstruction():
 #program starts here
 #step selection
 if __name__ == "__main__":
+	#reset the permission of mafft compiled files
+	os.system("chmod 777 ./dependencies/mafft-linux64/mafft.bat ./dependencies/mafft-linux64/mafftdir/bin/mafft")
+	
 	if args.step == 0 and args.codon: #all steps are chosen with codon alignment
 		proteinextraction()
 		concatenation()
