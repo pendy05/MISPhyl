@@ -22,7 +22,7 @@ args = parser.parse_args()
 
 def removeInvalidCharCPUs(filename):
 	try:
-		with open(args.outfile,"w") as removedSeq:	
+		with open(args.outfile,"a") as removedSeq:	
 			table={}
 			num = 0
 			with open("./%s/%s"%(args.directory, filename), 'r+', newline='') as infile:
