@@ -354,7 +354,7 @@ def concatenation():
 			os.system("rm %s%s"%(filelocation,i))
 
 	if len(os.listdir(filelocation)) == 0:
-		sys.exit("ERROR: No file in directory %"&(filelocation))
+		sys.exit("ERROR: No file in directory %"%(filelocation))
 		
 	if (args.mutualinfo and args.inputtype == "nt" and filelocation == "./msa/") or (args.mutualinfo and args.codon and filelocation == "./codonAlignment/"): #mutual information mode ON
         #run Rscript MI
