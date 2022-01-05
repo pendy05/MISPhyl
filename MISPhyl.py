@@ -472,9 +472,9 @@ def treeconstruction():
 				os.system("./dependencies/modeltest-ng-static -i %s -d nt -p %s -T raxml -o %s -q %s"%(args.MSAout, args.cpus, args.modeltestPrefix, args.partition))
 			else:
 				os.system("./dependencies/modeltest-ng-static -i %s -d %s -p %s -T raxml -o %s -q %s"%(args.MSAout,args.inputtype, args.cpus, args.modeltestPrefix, args.partition))
-			if os.path.isfile(fl):	
+			if os.path.isfile("%s.out"%(args.modeltestPrefix)):	
 				try:	
-					os.system("./dependencies/raxml-ng %s --all --msa %s --model %s --prefix %s --bs-trees %s" % (cmd3, args.MSAout, fl, args.prefix, args.bootstrap))
+					os.system("./dependencies/raxml-ng %s --all --msa %s --model %s.part.%s --prefix %s --bs-trees %s" % (cmd3, args.MSAout, args.modeltestPrefix,args.subsModel, args.prefix, args.bootstrap))
 				except:
 					sys.exit("ERROR: Refer log file of RAxML-NG for more details.")
 			elif args.inputtype == "nt":
@@ -520,7 +520,8 @@ def treeconstruction():
 #step selection
 if __name__ == "__main__":
 	#reset the permission of mafft compiled files
-	os.system("chmod 777 ./dependencies/mafft-linux64/mafft.bat ./dependencies/mafft-linux64/mafftdir/bin/mafft")
+	os.system("tar xzvf mafft-7.490-linux.tgz")
+	os.system("chmod 777 ./dependencies/mafft-linux64/mafft.bat ./dependencies/mafft-linux64/mafftdir/bin/mafft ./dependencies/raxml-ng ./dependencies/MutualInfo.R ./dependencies/modeltest-ng-static")
 	
 	if args.step == 0 and args.codon: #all steps are chosen with codon alignment
 		proteinextraction()
