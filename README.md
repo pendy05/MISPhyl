@@ -50,23 +50,23 @@ Ensure there is NO '_', underscore in your species name and accession ID.
 ```
 	$python3 ./dependencies/renameInput.py
 ```
-2.Ensure there is no invalid character in your input files. 
+2. Ensure there is no invalid character in your input files. 
 <br>If you require help, `removeInvalidCharacter.py` is provided in dependencies/ folder.
 
-3.For codon based alignment, ENSURE:<br>
-<br>  a) Same IDs are used in both protein and nucleotide input files
-<br>  b) Amino acid files in main directory inputfolder/ whereas nucleotide files in directory ntfolder/ .
-<br>  c) Value for option -f is set to "aa".
+3. For codon based alignment, ENSURE:
+	1. Same IDs are used in both protein and nucleotide input files
+	2. Amino acid files in main directory inputfolder/ whereas nucleotide files in directory ntfolder/ .
+	3. Value for option -f is set to "aa".
 
 
 
 ### Run all steps from 1 to 4 
-1.Users are required to create a folder inputfolder/.
+1. Users are required to create a folder inputfolder/.
 ```
 	$mkdir inputfolder
 ```
-2.Put the files in folder inputfolder/. 
-3.In your current directory, run the pipeline script. Eg:
+2. Put the files in folder inputfolder/. 
+3. In your current directory, run the pipeline script. Eg:
 ```
 	python3 MISPhyl.py [option]
 ```
@@ -86,22 +86,23 @@ Ensure there is NO '_', underscore in your species name and accession ID.
 Note: Codon Alignment (AA and corresponding NT files MUST have same filename, file extension need not to be)
 
 ### Step 1 : ProteinOrtho & (optional) Codon Alignment
-1.Users are required to create a folder inputfolder/.
+1. Users are required to create a folder inputfolder/.
 ```
 	$mkdir inputfolder
 ```
-2.Put the files in folder inputfolder/. 
+2. Put the files in folder inputfolder/. 
 Example:<br>
-a)Run step 1 with quiet mode ON and prefix for proteinortho as "project1"
+a) Run step 1 with quiet mode ON and prefix for proteinortho as "project1"
 ```
 	$python3 MISPhyl.py -s 1 -q -p project1 -e fa -f aa -u
 ```
 3.Slight difference if codon based alignment is ENABLED, ENSURE:
-<br>  i) Same IDs are used in both protein and nucleotide input files
+<br>  i) Same IDs are used in both protein and nucleotide input files <br>
 |    Example Condition   |          Protein           |  		   	Nucleotide				     | 
 |:------------:|:---------------------------|:-------------------------------|
-|      Same ID      |>H.sapiens_ACE1180<br>ACDACDACD<br>>H.sapiens_ACD12739<br>ACDDCACDDC       |	>H.sapiens_ACE1180<br>GCUUGUGAUGCUUGUGAUGCUUGUGAU<br>>H.sapiens_ACD12739<br>GCUUGUGAUGAUUGUGCUUGUGAUGAUUGU |
-|       Same Tag    |>H.sapiens_ACE80_1<br>ACDACDACD<br>>H.sapiens_ACD12739_2<br>ACDDCACDDC |>H.sapiens_ACE1180_1<br>GCUUGUGAUGCUUGUGAUGCUUGUGAU<br>><br>H.sapiens_ACDS2_2<br>GCUUGUGAUGAUUGUGCUUGUGAUGAUUGU	|
+|      Same ID      |>**H.sapiens**_ACE1180<br>ACDACDACD<br>>**H.sapiens**_ACD12739<br>ACDDCACDDC       |	>**H.sapiens**_ACE1180<br>GCUUGUGAUGCUUGUGAUGCUUGUGAU<br>>**H.sapiens**_ACD12739<br>GCUUGUGAUGAUUGUGCUUGUGAUGAUUGU |
+|       Same Tag    |>H.sapiens_ACE80_**1**<br>ACDACDACD<br>>H.sapiens_ACD12739_**2**<br>ACDDCACDDC |>H.sapiens_ACE1180_**1**<br>GCUUGUGAUGCUUGUGAUGCUUGUGAU<br>><br>H.sapiens_ACDS2_**2**<br>GCUUGUGAUGAUUGUGCUUGUGAUGAUUGU	|
+
 
 
 <br>  ii) amino acid files in main directory inputfolder/ whereas nucleotide files in directory ntfolder/ .
@@ -111,7 +112,7 @@ a)Run step 1 with quiet mode ON and prefix for proteinortho as "project1"
 ```
 	$python3 MISPhyl.py -e fasta -f aa -o -c 4
 ```
-<br>a) Run step 1 to step 2 with codon alignment, mutual information mode ON
+<br>b) Run step 1 to step 2 with codon alignment, mutual information mode ON
 ```
 	$python3 MISPhyl.py -e fasta -f aa -o -c 4 -s 1
 ```
@@ -124,7 +125,7 @@ a)Run step 1 with quiet mode ON and prefix for proteinortho as "project1"
 ```
 2. Move your .fasta files into folder orthologFamily/.
 3.Example:
-<br>a) Run step 2 with mafft program
+	1. Run step 2 with mafft program
 ```
 	$python3 MISPhyl.py -s 2
 ```
@@ -186,20 +187,20 @@ a) Run step 4 with input file MSA.fa, nucleotide, output files prefix "tree1", 2
 ## Main Output Folders
 
 ### Step 1 Folders:
-1.orthologFamily: core orthologous proteins/genes
-<br>2.nt_orthologFamily: corresponding core orthologous nucleotides (codon alignment)
-<br>3.codonAlignment: codon aligned nucleotides
+1. orthologFamily/: core orthologous proteins/genes
+2. nt_orthologFamily/: corresponding core orthologous nucleotides (codon alignment)
+3. codonAlignment/: codon aligned nucleotides
 
 ### Step 2 Folder:
-4.msa: multiple sequence alignment
+4. msa/: multiple sequence alignment files
 
 ### Step 3 Files:
-5.MSA.fa
-<br>6.MI_genes.csv: Mutual Information file
-<br>7.partition.txt
+5. MSA.fa: concatenated MSA file
+6. MI_genes.csv: Mutual Information file
+7. partition.txt
 
 ### Step 4 Folder:
-8.treeConstruction
+8. treeConstruction/: constructed tree files
 
 ## References
 1. Alexey M Kozlov, Diego Darriba, Tomáš Flouri, Benoit Morel, Alexandros Stamatakis, RAxML-NG: a fast, scalable and user-friendly tool for maximum likelihood phylogenetic inference, Bioinformatics, Volume 35, Issue 21, 1 November 2019, Pages 4453–4455
