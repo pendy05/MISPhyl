@@ -1,5 +1,6 @@
 # MISPhyl (Mutual Information Supermatrix Phylogenomic) Pipeline
-Reconstructs Phylogenomics Tree based on Mutual Information Evaluated Phylogenetics Signals From Genomes Derived Orthologous Sets
+Phylogenomics analyses are commonly applied to answer various research questions pertaining to relationships of species and events on Earth. Although phylogenomic tree reconstructions have been widely used in research, it is still a great challenge for many researchers to deal with its multi-step technical procedure and data handling, especially on genomic data. Herein we present MISPhyl, a user-friendly pipeline which utilises supermatrix-based procedure to yield phylogenomic tree. While a supermatrix phylogenomic tree aims to amplify phylogenetic signals, there are chances to include phylogenetic noises into the tree reconstruction. To address the issue, this automated pipeline has also implemented a Mutual Information (MI) approach to perform systematic selection of genes with optimal phylogenetic signals for phylogenomic inference. The MI approach has been previously discussed for its ability to generate a reliable phylogenomic tree and identify species-specific markers in Mycobacterium abscessus Complex (Tan et al., 2013).
+
 
 # Table of Contents
 * [Software and Script](#software-and-script)
@@ -12,9 +13,9 @@ Reconstructs Phylogenomics Tree based on Mutual Information Evaluated Phylogenet
 All the dependencies needed for the script are included within the tarball file. 
 1) ProteinOrtho : 6.0.24 (Perl: 5 version 32 , Python: 3.8.3 , BLAST: 2.9.0-2 , Diamond: 2.0.4)
 2) Pal2Nal: v14.1
-3) Mafft : v7.453
-4) Mutual Information script: 3.6.3
-5) ModelTest-NG: 0.1.7
+3) Mafft : v7.490
+4) Mutual Information script: R: 3.6.3
+5) ModelTest-NG-static: 0.1.7 _(Please note that modeltest-ng-static binary file relies on compatible hardware)_
 6) RAXML-NG : 1.0.1
 
 
@@ -39,9 +40,8 @@ If u do not have the sudo right, please contact your system administrator.
 
 
 
-
 # Getting Started
-## How to run this program?
+## How to run this program? [CRITICAL]
 1. Users are required to change each sequence header/description in all input files corresponding to the species.
 <br />Format: <br>
 `>[speciesName]_[accessionID]....`
