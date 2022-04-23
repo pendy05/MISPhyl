@@ -8,9 +8,9 @@ Tools & Script:  1)Proteinortho
 		6)RAxML-NG
         '''
 from Bio import SeqIO
-#from colorama import Fore, Back, Style 
 import argparse
 import os
+import glob
 import csv
 import re
 import glob
@@ -48,56 +48,56 @@ For more information and details, read on readme.txt.
 
 '''))
 
-parser.add_argument("-e", type=str, action="store", dest="fileextension",
-			choices=["faa","fa","fasta","fna"], default="fa", help="input file extension [default: fa]")
-parser.add_argument("-f", type=str, action="store", dest="inputtype",
+parser.add_argument("-f", type=str, action="store", required = True, dest="fileextension",
+			choices=["faa","fa","fasta","fna","fnn"], default="fa", help="input file extension [default: fa]")
+parser.add_argument("-i", type=str, action="store", required = True, dest="inputtype",
 			choices=["nt","aa"], help="type of input sequences: nucleotide[nt] or protein[aa] ")
 parser.add_argument("-s", type=int, action="store",dest="step", default=0,
 			choices=[0,1,2,3,4], help="step to be done [default:0]\
 			0 = all ; 1 = proteinortho (protein extraction); 2 = mafft (multiple sequence alignment) ; 3 = mutual information & concatenation ,4 = raxml-ng (tree construction)")
-parser.add_argument("-q", help="Do not show progress message", action="store_true", dest="quiet")
-parser.add_argument("-w", help="Have minimum of four input files; required for tree construction (DEFAULT:ON)", action="store_true", dest="limit")
-parser.add_argument("-c", type=int, action="store", dest="cpus",
+parser.add_argument("-t", help="Have minimum of four input files; required for tree construction (DEFAULT:ON)", action="store_true", dest="limit")
+parser.add_argument("-cpus", type=int, action="store", dest="cpus",
 			default=-1,help="number of cpu threads to be utilized [default: all available]")
-
+#parser.add_argument("-os", type=str, action="store", required = True, dest="ostype",
+#			choices=["windows","linux"], help="operating system (window or linux)")
 
 #Proteinortho
 parser.add_argument("-p", type=str, action="store", dest="name",
                     default="myproject", help = "prefix for proteinortho resulting file names")
-parser.add_argument("-d", type=str, action="store", dest="blastprogram",
+parser.add_argument("-algo", type=str, action="store", dest="blastprogram",
 			default="diamond", help="blast program for proteinortho [default:diamond(protein) blastn(nucleotide)] \
 			{autoblast|blastp|blastn|blastp_legacy|blastn_legacy|tblastx_legacy|diamond|usearch|ublast|lastp|lastn|rapsearch|topaz|blatp|blatn|mmseqsp|mmseqsn}")
-parser.add_argument("-i",type= str, action="store", dest="binpath",
+parser.add_argument("-path",type= str, action="store", dest="binpath",
 			default="",help="binpath for the blast program selected")
 
 #codon alignment
-parser.add_argument("-o", action="store_true", dest="codon",
+parser.add_argument("-codon", action="store_true", dest="codon",
 			help="codon based alignment, translate protein alignments to nucleotide alignments (default:OFF)")
 
 #mafft
-parser.add_argument("-n", type=str, action="store", dest="MSAout",
+parser.add_argument("-msa", type=str, action="store", dest="MSAout",
                     default="MSA.fa", help = "MSA output filename in FASTA format with .fa extension")
-parser.add_argument("-a", type=int, action="store", dest="mafftmaxiteration",
+parser.add_argument("-maxiter", type=int, action="store", dest="mafftmaxiteration",
                     default=0, help = "number of mafft max iterations")
 
 #mutualInformation
-parser.add_argument("-u", help="select phylogenetically optimal genes for phylogenetic interference based on mutual information\
+parser.add_argument("-mi", help="select phylogenetically optimal genes for phylogenetic interference based on mutual information\
                          ,ONLY available for nucleotide (default:ON)", action="store_false", dest="mutualinfo")
-parser.add_argument("-t", type=int, action="store",dest="medianrange",
+parser.add_argument("-r", type=int, action="store",dest="medianrange",
 			default=50, help="number of median-ranked range genes in MI_genes.csv to be concatenated (default:50)")
 
 
 #concatenation
-parser.add_argument("-k", type=str, action="store", dest="partition",
+parser.add_argument("-partition", type=str, action="store", dest="partition",
                     default="partition.txt", help = "partition filename [default: partition.txt]")
 #modeltest-ng
-parser.add_argument("-m", type=str, action="store", dest="modeltestPrefix",
+parser.add_argument("-n", type=str, action="store", dest="modeltestPrefix",
                     default="modeltest", help = "prefix for modelTest-NG output file")
 
 #raxml-ng
-parser.add_argument("-r", type=str, action="store", dest="prefix",
+parser.add_argument("-x", type=str, action="store", dest="prefix",
                     default="T1" , help = "prefix for raxml-ng output file")
-parser.add_argument("-v", type=str, action="store", dest="subsModel",
+parser.add_argument("-model", type=str, action="store", dest="subsModel",
 			choices=["aic","aicc","bic"], default="bic", help="type of substitution model to be used in tree construction ")
 #parser.add_argument("-o", type=str, action="store", dest="model",
 #                    default="LG+G8+F", help="raxml-ng evolutionary model {default- nucleotide:GTR+G ; protein: LG+G8+F}")
@@ -110,23 +110,11 @@ if len(sys.argv)==1:
 
 args = parser.parse_args()
 
-cmd1="" #for proteinOrtho
-cmd2="" #for MSA; mafft
-cmd3="" #for tree construction
-
-if args.quiet: #quiet mode ON
-	cmd1 += "-silent "
-	cmd2 += "--quiet "
-	cmd3 += "--log WARNING "
-
 if args.cpus > os.cpu_count():
 	sys.exit("Maximum CPU: %s"%os.cpu_count())
 elif args.cpus == -1 : #all available cpus
 	args.cpus = os.cpu_count()
 
-cmd1 += ("-cpus=%s " %args.cpus)
-cmd2 += ("--thread %s " %args.cpus)
-cmd3 += ("--threads %s " %args.cpus)
 
 '''
 proteinortho
@@ -138,31 +126,44 @@ def proteinextraction():
 	print("\nSTEP 1: Core Orthologous Protein Extraction\n")
 	if args.codon: #codon based alignment mode ON
 		if not os.path.exists("./ntfolder/"):
-			sys.exit("ERROR:\"ntfolder\" child directory is NOT FOUND!\n")
+			sys.exit("ERROR: \"ntfolder\" child directory is NOT FOUND in current working directory '%s'!\n" % os.getcwd())
 
 	if not os.path.exists("./inputfolder/"):
-		print("ERROR:\"inputfolder\" child directory is not found!\n")
-		sys.exit()
-	
-	if not args.inputtype:
-		sys.exit("ERROR:Please select the sequence type, nt or aa.\n")
-	
+		sys.exit("ERROR:\"inputfolder\" child directory is NOT FOUND in current working directory '%s'!\n" % os.getcwd())
+
 	MAX= len(glob.glob1("./inputfolder/","*.%s" %(args.fileextension))) #count number of . sample file in current directory
 	if args.step == 0:
 		if MAX < 4 and args.limit != True: #must have >= 4 samples
-			sys.exit("\nERROR: Less than 4 files with .%s extension being detected. Minimum of 4 input files are required for the tree construction. \nIf you would like to disable this feature for step 1 in all-in-one step, please include \"-w\" in your command line." %(args.fileextension))
-	
-	if args.blastprogram == "diamond":#default blast program
+			sys.exit("\nERROR: Less than 4 files with .%s extension being detected. Minimum of 4 input files are required for the tree construction. \nIf you would like to disable this feature for step 1 protein extraction, please include \"-w\" in your command line." %(args.fileextension))
+
+	#variables for proteinortho arguments
+	projectName = "-project=" + args.name
+	fileExtension = "inputfolder/*." + args.fileextension
+	blastProgram = '-p=' + args.blastprogram
+	binPath = "" #if binpath is not provided by user, search from directories in executable path
+	if args.blastprogram == "diamond":#diamond: default blast program for aa
 		if args.inputtype == "nt":
-			os.system("perl ./dependencies/proteinortho-master/proteinortho6.pl %s -p=blastn -project=%s inputfolder/*.%s " %(cmd1, args.name, args.fileextension))
+			blastProgram = '-p=blastn' #blastn: default blast program for nt
 		else:
-			os.system("perl ./dependencies/proteinortho-master/proteinortho6.pl %s -binpath=\"./dependencies/\" -p=%s -project=%s inputfolder/*.%s " %(cmd1, args.blastprogram, args.name, args.fileextension))
-	else:
-		if args.binpath == "":#search from directories in executable path
-			os.system("perl ./dependencies/proteinortho-master/proteinortho6.pl %s -p=%s -project=%s inputfolder/*.%s " %(cmd1, args.blastprogram, args.name, args.fileextension))
-		else:#bin path provided by user
-			os.system("perl ./dependencies/proteinortho-master/proteinortho6.pl %s -binpath=\"%s\" -p=%s -project=%s inputfolder/*.%s " %(cmd1, args.binpath, args.blastprogram, args.name, args.fileextension))
-	
+			binPath = '-binpath=\"./dependencies/\"' #diamond is accessible at dependencies folder
+	else: #if user choose blast program other than diamond
+		if args.binpath != "": #bin path provided by user
+			binPath = '-binpath=\"' + args.binpath + '\"'
+
+	#run proteinortho
+	try:
+		fileList = glob.glob(fileExtension)
+		if binPath == "":
+			proteinOrtho_cmd = ['perl','./dependencies/proteinortho-master/proteinortho6.pl',blastProgram, projectName] + fileList
+		else:
+			proteinOrtho_cmd = ['perl','./dependencies/proteinortho-master/proteinortho6.pl',binPath, blastProgram, projectName] + fileList
+		subprocess.run(proteinOrtho_cmd,check = True)
+		#out, error = p.communicate()
+		print(proteinOrtho_cmd)
+	except subprocess.CalledProcessError as e:
+		sys.exit(e)
+
+	print("moving to grab protein")
 	if os.path.isfile("%s.proteinortho.tsv" %(args.name)): #check if this file present in PWD
 		filesize = os.path.getsize("%s.proteinortho.tsv" %(args.name))
 
@@ -170,7 +171,7 @@ def proteinextraction():
 			sys.exit("\nERROR: File \"%s.proteinortho.tsv\" is EMPTY!\n" %(args.name))
 		
 		else: #not empty then proceed
-            	#get coreSCG in .tsv file
+			#get coreSCG in .tsv file
 			SCGoutput = open("coreSCP.tsv","w")
 			with open("%s.proteinortho.tsv" %(args.name)) as tsv:
 				fileContent = csv.reader(tsv, delimiter = '\t')
@@ -181,15 +182,20 @@ def proteinextraction():
 					elif row[0] == row[1] == str(MAX):
 						tsvOutput.writerow(row)
 			SCGoutput.close()
-
-			os.system("./dependencies/proteinortho-master/src/proteinortho_grab_proteins.pl -tofiles coreSCP.tsv inputfolder/*.%s" %(args.fileextension))
+			try:
+				print("grabbing proteins...")
+				subprocess.run(['perl','./dependencies/proteinortho-master/src/proteinortho_grab_proteins.pl','-tofiles','coreSCP.tsv']+fileList, check = True)
+			except subprocess.CalledProcessError as e:
+				sys.exit(e)
 			for filename in os.listdir("."):
 				if filename.startswith("coreSCP.tsv.OrthoGroup") and filename.endswith(".fasta"):
 					os.rename(filename,filename.replace(".tsv.","_"))
 
 			if not os.path.exists('./orthologFamily'):
 				os.makedirs("./orthologFamily")
-			os.system("mv coreSCP*  %s* orthologFamily/" %args.name)
+			proteinOrthoPrefix = args.name + "*"
+			os.system('mv coreSCP* %s orthologFamily/'% proteinOrthoPrefix)
+
 			print("\nSingle Core Orthologous Genes/Protein Extraction done.")
 			print("Output files could be found in directory orthologFamily/ .\n")
 		print("\nCore Orthologous Protein / Gene Extraction Done\n")
@@ -197,7 +203,7 @@ def proteinextraction():
 			codonAlignment()
 			
 	else:
-		sys.exit("\nERROR:File \"%s.proteinortho.tsv\" is NOT EXISTED in current directory \"%s\"\n" %(args.name, os.getcwd()))
+		sys.exit("\nERROR: File \"%s.proteinortho.tsv\" is NOT EXISTED in current directory \"%s\"\n" %(args.name, os.getcwd()))
 
 
 '''
@@ -217,18 +223,23 @@ def numericalSort(value):
 def msa():
 	print("\nSTEP2: Multiple Sequence Alignment\n")
 	if os.path.exists("./orthologFamily"): #if the imput directory is created
+		mafft_path = ''
+
 		for fl in os.listdir("./orthologFamily/"): 
 			if fl.endswith(".fasta"):
-				os.system("./dependencies/mafft-linux64/mafft.bat %s --maxiterate %s --auto ./orthologFamily/%s > aligned%s" % (cmd2, args.mafftmaxiteration, fl, fl))
-    
+				infile = os.path.join("orthologFamily/",fl)
+				outfile = 'aligned' + fl
+				#msa_cmd = [mafft_path,'--thread',str(args.cpus),'--maxiterate',str(args.mafftmaxiteration),'--auto',infile,'>',outfile]
+				os.system("./dependencies/mafft-linux64/mafft.bat --thread %s --maxiterate %s --auto %s > %s" %(args.cpus, args.mafftmaxiteration, infile, outfile))
+
 		if not os.path.exists('./msa'):
 			os.makedirs('./msa')
-		os.system("mv aligned* msa/")
-		print("\nMultiple Sequence Alignment done.")
+		os.system('mv aligned* msa/')
+		
+		print("\nMultiple Sequence Alignment done!")
 		print("Output files could be found in directory msa/ .\n")
-		print("\nMultiple Sequence Alignment Done\n")
 	else:
-		sys.exit("ERROR: Input directory \"orthologFamily\" is NOT FOUND in current directory.\n For MSA, please ensure this directory, \"orthologFamily\" is created with input files located inside.")
+		sys.exit("ERROR: Input directory \"orthologFamily\" is NOT FOUND in current directory.\n For MSA, please ensure this directory, \"orthologFamily\" is created with files to be aligned located inside.")
 	
 
 def codonAlignment():
@@ -239,12 +250,11 @@ def codonAlignment():
 		sys.exit("ERROR: coreSCP.tsv is NOT FOUND!")
 	
 	if filesize == 0:#is the file empty?
-		print("ERROR: File \" orthologFamily/coreSCP.tsv \" is EMPTY!")
-		sys.exit()
+		sys.exit("ERROR: File \" orthologFamily/coreSCP.tsv \" is EMPTY!")
 
 	else:
 		speciesNum = 0
-		with open ("./orthologFamily/coreSCP.tsv") as inOrtho:
+		with open("./orthologFamily/coreSCP.tsv") as inOrtho:
 			content = csv.reader(inOrtho,delimiter="\t")
 			count = 0
 			col = 0
@@ -264,7 +274,7 @@ def codonAlignment():
 					for i in range(len(contentList)):
                                                  contentList[i].append(record[i+3].split("_")[-1])
 				else:
-					sys.exit("ERROR: Check the coreSCP.tsv file!!")# shouldnt have this error
+					sys.exit("ERROR: Check the coreSCP.tsv file!!")# supposedly this error will not prompt
 
 		orthoNum = len(contentList[0])-1
 		ls = [i for i in os.listdir("./ntfolder/")] # need change to i.split(".")[0]
@@ -300,7 +310,7 @@ def codonAlignment():
 				print("Number of sequences found in nt file %s : %d"%(pattern[0],count))
 						
 			else:
-				sys.exit("\n ERROR: Corresponding nt file %s is FOUND for aa file %s!" %(target,pattern))
+				sys.exit("\n ERROR: Corresponding nt file %s is NOT FOUND for aa file %s!" %(target,pattern))
 
 		print("Absent Ortholog (file,accessionID): ",absentNtOrthologs)
 		print("Ortholog Group with absent sequence: Group ", absentNtID)
@@ -313,7 +323,7 @@ def codonAlignment():
 		if not os.path.exists("./nt_orthologFamily"):
 			os.makedirs("./nt_orthologFamily")
 
-		os.system("mv nt_OrthoGroup* nt_orthologFamily/")
+		os.system('mv nt_OrthoGroup* nt_orthologFamily/')
 
 		count = 0
 		#msa
@@ -328,13 +338,13 @@ def codonAlignment():
 					break
 			if flag:
 				print("ortholog: ",i, "\tnt:", j)
-				os.system("./dependencies/pal2nal.v14.1/pal2nal.pl %s %s > codon%d.fasta -output fasta"%(i,j,count))
+				os.system("perl ./dependencies/pal2nal.v14.1/pal2nal.pl %s %s > codon%d.fasta -output fasta"%(i,j,count))
 				count +=1
 
 		if not os.path.exists("./codonAlignment"):
 			os.makedirs("./codonAlignment")
 
-		os.system("mv codon* codonAlignment/")
+		os.system('mv codon*.fasta codonAlignment/')
 	print("\nCodon Alignment Done\n")
 
 def concatenation():
@@ -343,18 +353,19 @@ def concatenation():
 	pos, endpos = 0,0
 	partition=""
 	filelocation = "./msa/"
-	if not args.inputtype:
-		sys.exit("ERROR: Please select the sequence type, nt or aa.\n")
-		
+
 	if args.codon:
 		filelocation="./codonAlignment/"
+
+	if not os.path.exists(filelocation):
+			sys.exit("ERROR: \'%s\' child directory is NOT FOUND in current working directory '%s'!\n" % (filelocation,os.getcwd()))
 
 	for i in os.listdir(filelocation):# check if there is any empty file, if yes, remove it
 		if os.stat("%s%s"%(filelocation,i)).st_size == 0:
 			os.system("rm %s%s"%(filelocation,i))
 
-	if len(os.listdir(filelocation)) == 0:
-		sys.exit("ERROR: No file in directory %"%(filelocation))
+	if len(os.listdir(filelocation)) == 0: #prompt error if no file present in the specific child directory
+		sys.exit("ERROR: No file in directory \'%s\'!"%(filelocation))
 		
 	if (args.mutualinfo and args.inputtype == "nt" and filelocation == "./msa/") or (args.mutualinfo and args.codon and filelocation == "./codonAlignment/"): #mutual information mode ON
         #run Rscript MI
@@ -364,8 +375,7 @@ def concatenation():
 		try:
 			x = subprocess.check_output(cmd,universal_newlines=True)
 		except:
-			print("ERROR encountered for mutual information. Ensure there is no invalid character in your samples and the samples are located in folder msa/.")
-			sys.exit(1)
+			sys.exit("ERROR encountered for mutual information. Ensure there is no invalid character in your samples and the samples are located in folder msa/.")
 		print("\nMI_genes.csv can be found in current directory.\n")
 
         #gene selection
@@ -396,22 +406,26 @@ def concatenation():
 			half = args.medianrange/2
 			if str(half).split(".")[-1] == "0":
 				half=int(half)
-
+			print(half, itr)
 			#slice median ranked genes
 			if itr < half :
+				print("first if")
 				extra = half -itr
 				start, end = int(0), int(itr+half+extra) 
 			elif itr + math.ceil(half) > len(data)-1:
+				print("second if")
 				start, end = int(len(data)-args.medianrange), int(len(data))
-			elif type(half) == int:    
-				start, end = int(itr-half), int(itr+half)
+			elif type(half) == int:   
+				print("third if") 
+				start, end = int(itr-half-1), int(itr+half-1)
 			elif type(half) == float:
+				print("4th if")
 				start, end = int(itr-math.ceil(half))+1,int(itr+math.ceil(half))
 
 			if os.path.isfile("%s" % (args.partition)):
 				print("%s is found in this directory and will be overwritten!!" % (args.partition))
 			with open(args.partition,"w") as partfile:#create partition file
-		    		#loop through files for concatenation
+				#loop through files for concatenation
 				for filename in sorted(filenames[start:end]):
 					with open(filename,'r',newline=''):
 						for record in SeqIO.parse(filename,"fasta"):
@@ -424,9 +438,9 @@ def concatenation():
 					pos = endpos+pos
 
 	else:
-		if os.path.exists(filelocation): #if the input directory is created
+		if os.path.exists(filelocation): #if the input directory exists
 			if os.path.isfile("%s" % (args.partition)):
-				print("%s is found in this directory and will be overwritten!!" % (args.partition))
+				print("\'%s\' is found in this directory and will be overwritten!!" % (args.partition))
 			with open(args.partition,"w") as partfile:#create partition file
 				for fl in sorted(os.listdir(filelocation),key=numericalSort):
 					if fl.endswith(".fasta") or fl.endswith(".fa"):
@@ -440,22 +454,22 @@ def concatenation():
 						partfile.write(args.inputtype+", "+partitionName+"="+str(pos+1)+"-"+str(endpos+pos)+"\n")#write to partition file
 						pos = endpos+pos
 		else:
-			print("ERROR: Input directory \"%s\" is NOT FOUND in current directory.\n"%(filelocation))
-			sys.exit()
+			sys.exit("ERROR: Input directory \"%s\" is NOT FOUND in current directory.\n"%(filelocation))
 
+	#if the MSA file is present in current directory, it will be overwritten
 	if os.path.isfile("%s" % (args.MSAout)):
-		print("%s is found in this directory and will be overwritten!!" % (args.MSAout))
-
+		print("\'%s\' is found in this directory and will be overwritten!!\n" % (args.MSAout))
+	#write MSAs to a MSA file
 	with open(args.MSAout,'w') as outfile:
 		for header, seq in table.items():
 			outfile.write(">"+header+'\n'+seq+'\n')
 
 	if args.mutualinfo and args.inputtype == "nt":
 		print("\nMutual Information and Concatenation done.")
-		print("Output files %s can be found in current directory.\n"%args.MSAout)
+		print("Output files \'%s\' can be found in current directory %s.\n"%(args.MSAout, os.getcwd()))
 	else:
 		print("\nConcatenation done.")
-		print("Output files %s can be found in current directory.\n"%args.MSAout)
+		print("Output files \'%s\' can be found in current directory %s.\n"%(args.MSAout, os.getcwd()))
 
 '''
 Tree Reconstruction
@@ -463,52 +477,68 @@ Tree Reconstruction
 '''
 def treeconstruction():
 	print("\nSTEP 4: Tree Construction\n")
-	if not args.inputtype:
-		sys.exit("ERROR: Please select the sequence type, nt or aa.\n")
 
+	if args.inputtype == "nt": #if modeltest-ng output file absent in current working directory and the sequence type is nucleotide
+	#run raxml-ng with default nt model GTR+G
+		modeltype = "GTR+G"
+	elif args.inputtype == "aa": #if modeltest-ng output file absent in current working directory and the sequence type is amino acid
+	#run raxml-ng with default model LG+G8+F
+		modeltype = "LG+G8+F"
+	
 	if os.path.exists("%s"%(args.MSAout)):
 		if os.path.isfile("%s" % (args.partition)):#if partition.txt is provided
-			if args.codon:
-				os.system("./dependencies/modeltest-ng-static -i %s -d nt -p %s -T raxml -o %s -q %s"%(args.MSAout, args.cpus, args.modeltestPrefix, args.partition))
-			else:
-				os.system("./dependencies/modeltest-ng-static -i %s -d %s -p %s -T raxml -o %s -q %s"%(args.MSAout,args.inputtype, args.cpus, args.modeltestPrefix, args.partition))
-			if os.path.isfile("%s.out"%(args.modeltestPrefix)):	
-				try:	
-					os.system("./dependencies/raxml-ng %s --all --msa %s --model %s.part.%s --prefix %s --bs-trees %s" % (cmd3, args.MSAout, args.modeltestPrefix,args.subsModel, args.prefix, args.bootstrap))
-				except:
-					sys.exit("ERROR: Refer log file of RAxML-NG for more details.")
-			elif args.inputtype == "nt":
-				os.system("./dependencies/raxml-ng %s --all --msa %s --model GTR+G --prefix %s --bs-trees %s" % (cmd3, args.MSAout, args.prefix, args.bootstrap))
-			elif args.inputtype == "aa":
-				os.system("./dependencies/raxml-ng %s --all --msa %s --model LG+G8+F --prefix %s --bs-trees %s" % (cmd3, args.MSAout, args.prefix, args.bootstrap))	
+			seqtype = args.inputtype #sequence type (nt or aa)
+			if args.codon: #conversion from amino acids to nucleotide (codon alignment) is chosen, thus, current sequence type is nt, instead of the original input sequence type, aa
+				seqtype = "nt"
 
+			#run modeltest-ng to get substitution model for each individual partition (gene)
+			try: #modeltest-ng static will only be called if it is hardware compatible
+				subprocess.run(['./dependencies/modeltest-ng-static','-i',args.MSAout,'-d',seqtype,'-p',str(args.cpus),'-T','raxml','-o',args.modeltestPrefix,'-q',args.partition],check = True)
+			except subprocess.CalledProcessError as e:
+				print(e)
+				sys.exit("\nERROR: modeltest-ng-static binary file seems to be not compatible with your hardware. But no worries. \nThere are two recommended ways to solve this issue: \n1. Download the source files from modeltest-ng github \'https://github.com/ddarriba/modeltest/wiki/Download-and-Install\' and run the partition file using modeltest-ng instead of modeltest-ng-static AND comment the try and except block in MISPhyl.py script (line 495 to 499). Rerun step 4, tree construction\n2.Comment the try and except block in MISPhyl.py script (line 495 to 499) AND stick to one substitution model for all the genes (kindly make use of the argument \'-model\' to provide the wanted subtitution model). Rerun tree construction, step 4.")
+
+			#run RAXML-NG
+			if os.path.isfile("%s.out"%(args.modeltestPrefix)): #if modeltest-ng output file is detected in current working directory
+				modeltestPrefix = args.modeltestPrefix + '.part.' + args.subsModel
+				try:	
+					subprocess.run(["./dependencies/raxml-ng", '--threads',str(args.cpus),'--all','--msa',args.MSAout, '--model', modeltestPrefix, '--prefix',args.prefix,'--bs-trees',str(args.bootstrap)],check = True)
+				except subprocess.CalledProcessError as e:
+					sys.exit(e)
+					sys.exit("ERROR: Please refer RAxML-NG log file for more details.")
+			elif args.inputtype == "nt" or args.inputtype == "aa":
+				try:
+					subprocess.run(['./dependencies/raxml-ng','--threads',str(args.cpus),'--all','--msa',args.MSAout, '--model',modeltype,'--prefix',args.prefix,'--bs-trees',str(args.bootstrap)],check = True)
+				except subprocess.CalledProcessError as e:
+					sys.exit(e)
 		else:
-			#os.system("./dependencies/modeltest-ng-static -i %s -d %s -p %s -T raxml -o %s -q %s"%(args.MSAout,args.inputtype, args.cpus, args.modeltestPrefix, args.partition))
 			modelOutfile="%s.out" % (args.modeltestPrefix)
-			if os.path.isfile(modelOutfile):	
+			if os.path.isfile(modelOutfile): #if modeltest-ng output file present in current working directory, run raxml-ng with the chosen substitution model
 				with open(modelOutfile,"r") as infile:
 					text=infile.read()
 				substitutions = re.findall(r"  > raxml-ng .*",text)
 
-				if args.subsModel=="bic":
-					os.system("./dependencies/raxml-ng %s --all --msa %s --model %s --prefix %s --bs-trees %s" % (cmd3, args.MSAout, substitutions[0].split()[-1],args.prefix, args.bootstrap))
+				if args.subsModel=="bic": #select substitution model type
+					modeltype = substitutions[0].split()[-1]
 				elif args.subsModel=="aic":
-					os.system("./dependencies/raxml-ng %s --all --msa %s --model %s --prefix %s --bs-trees %s" % (cmd3, args.MSAout, substitutions[1].split()[-1],args.prefix, args.bootstrap))
+					modeltype = substitutions[1].split()[-1]
 				elif args.subsModel=="aicc":
-					os.system("./dependencies/raxml-ng %s --all --msa %s --model %s --prefix %s --bs-trees %s" % (cmd3, args.MSAout, substitutions[2].split()[-1],args.prefix, args.bootstrap))
-				
-			elif args.inputtype == "nt":
-				os.system("./dependencies/raxml-ng %s --all --msa %s --model GTR+G --prefix %s --bs-trees %s" % (cmd3, args.MSAout, args.prefix, args.bootstrap))
-			elif args.inputtype == "aa":
-				os.system("./dependencies/raxml-ng %s --all --msa %s --model LG+G8+F --prefix %s --bs-trees %s" % (cmd3, args.MSAout, args.prefix, args.bootstrap))
-	
+					modeltype = substitutions[2].split()[-1]
+
+			#run RAXML-NG
+			try:
+				subprocess.run(['./dependencies/raxml-ng','--threads',str(args.cpus),'--all','--msa',args.MSAout, '--model',modeltype,'--prefix',args.prefix,'--bs-trees',str(args.bootstrap)],check = True)
+			except subprocess.CalledProcessError as e:
+				sys.exit(e)
 	else:
-		sys.exit("ERROR: %s"%(args.MSAout), " is NOT FOUND in current directory ", os.getcwd())
-    
+		sys.exit("ERROR: %s is NOT FOUND in current directory \"%s\" !"%(args.MSAout,os.getcwd()))
+
 	if not os.path.exists('./treeConstruction'):
 		os.makedirs('./treeConstruction')
+	
+	prefix = args.prefix + "*"
+	os.system('mv %s treeConstruction/'% prefix)
 
-	os.system("mv %s* treeConstruction/" %(args.prefix))
 	if os.path.exists('./%s.raxml.reduced.phy'%args.MSAout):
 		os.system("mv ./%s.raxml.reduced.phy treeConstruction/" % args.MSAout)
 	if os.path.exists('./%s.raxml.log' % args.MSAout):
@@ -519,9 +549,8 @@ def treeconstruction():
 #program starts here
 #step selection
 if __name__ == "__main__":
-	#reset the permission of mafft compiled files
-	os.system("tar xzvf mafft-7.490-linux.tgz")
-	os.system("chmod 777 ./dependencies/mafft-linux64/mafft.bat ./dependencies/mafft-linux64/mafftdir/bin/mafft ./dependencies/raxml-ng ./dependencies/MutualInfo.R ./dependencies/modeltest-ng-static")
+	#reset the permission of dependencies
+	os.system("chmod 775 ./dependencies/*")
 	
 	if args.step == 0 and args.codon: #all steps are chosen with codon alignment
 		proteinextraction()
