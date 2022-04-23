@@ -8,6 +8,7 @@ Phylogenomics analyses are commonly applied to answer various research questions
 * [Getting Started](#getting-started)
 * [Options](#options)
 * [Main Output Folders](#main-output-folders)
+* [Highlight](#highlight)
 
 ## Software and Script
 All the dependencies needed for the script are included within the tarball file. 
@@ -200,6 +201,16 @@ a) Run step 4 with input file MSA.fa, nucleotide, output files prefix "tree1", 2
 
 ### Step 4 Folder:
 8. treeConstruction/: constructed tree files
+
+## Highlight
+If unfortunately, you encounter this error when reaching tree construction step:
+```
+ERROR: modeltest-ng-static binary file seems to be not compatible with your hardware. But no worries.
+There are two recommended ways to solve this issue: 
+1. Download the source files from modeltest-ng github \'https://github.com/ddarriba/modeltest/wiki/Download-and-Install\' and run the partition file using modeltest-ng instead of modeltest-ng-static AND comment the try and except block in MISPhyl.py script (line 495 to 499). Rerun step 4, tree construction.
+2.Comment the try and except block in MISPhyl.py script (line 495 to 499) AND stick to one substitution model for all the genes (kindly make use of the argument \'-model\' to provide the wanted subtitution model). Rerun tree construction, step 4.
+```
+Please follow the suggested ways to resolve it. Have fun!
 
 ## References
 1. Buchfink B, Reuter K, Drost HG, "Sensitive protein alignments at tree-of-life scale using DIAMOND", Nature Methods 18, 366–368 (2021). https://doi.org/10.1038/s41592-021-01101-x
