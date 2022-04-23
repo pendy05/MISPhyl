@@ -164,21 +164,20 @@ a) Run step 4 with input file MSA.fa, nucleotide, output files prefix "tree1", 2
 |:-------------:|:----------------------------:|:------------------------------------------:|--------------------------------------------------------------------------------- |
 |-h             | N/A                          |N/A 					 					| show help message																   |
 |-s             | int                          |0 <br>(all)	 			 					| select step to be run <br>0:all (from step 1 to 3)<br>1:proteinortho<br>2:msa(muscle/mafft)<br>3:raxml-ng |
-|-q             | N/A	                       |OFF	 	 				 					| do not show progress message   						|
-|-c             | int	                       |-1 <br>(all available)	 					| number of cpu / threads to be utilized   				|
-|-e             | string                       |faa 	 				 					| input file extension {fasta,faa,fna,fa}   			|
-|-f             | string                       |N/A 	 				 					| type of input sequences {protein:aa / nucleotide:nt}	|
-|-u             | N/A                          |ON		 				 					| mutual information : select optimal phylogenetical signal genes for phylogenomic interference	    |
-|-t             | int	                       |myproject	 	 		 					| prefix for proteinOrtho resulting file names   		|
-|-p             | string                       |faa 	 				 					| input file extension {fasta,faa,fna,fa}   			|
-|-d             | string                       |protein [diamond]<br> nucleotide [blastn] 	| blast program available for proteinOrtho 				|
-|-i             | string                       |./dependencies/	 							| binpath for proteinOrtho blast program selection	    |
-|-n             | string	                   |MSA.fa	 	 								| multiple sequence alignment output filename in FASTA format  |	
-|-a             | int                          |0		 									| number of maximum iterations in mafft	    			|
-|-o             | string	                   |partition.txt	 							| partition filename   									|
-|-m             | string                       |modeltest 	 								| modelTest-NG output file prefix   					|
-|-r             | string                       |T1 	 										| prefix for raxml-ng output files 						|
-|-v             | string                       |bic		 								    | model selection for tree construction {bic,aic,aicc}	|
+|-cpus             | int	                       |-1 <br>(all available)	 					| number of cpu / threads to be utilized   				|
+|-f             | string                       |faa 	 				 					| input file extension {fasta,faa,fna,fa}   			|
+|-i             | string                       |N/A 	 				 					| type of input sequences {protein:aa / nucleotide:nt}	|
+|-mi             | N/A                          |ON		 				 					| mutual information : select optimal phylogenetical signal genes for phylogenomic interference	    |
+|-p             | int	                       |myproject	 	 		 					| prefix for proteinOrtho resulting file names   		|
+|-f             | string                       |faa 	 				 					| input file extension {fasta,faa,fna,fa}   			|
+|-algo             | string                       |protein [diamond]<br> nucleotide [blastn] 	| blast program available for proteinOrtho 				|
+|-path             | string                       |./dependencies/	 							| binpath for proteinOrtho blast program selection	    |
+|-msa             | string	                   |MSA.fa	 	 								| multiple sequence alignment output filename in FASTA format  |	
+|-maxiter             | int                          |0		 									| number of maximum iterations in mafft	    			|
+|-partition             | string	                   |partition.txt	 							| partition filename   									|
+|-n             | string                       |modeltest 	 								| modelTest-NG output file prefix   					|
+|-x             | string                       |T1 	 										| prefix for raxml-ng output files 						|
+|-model             | string                       |bic		 								    | model selection for tree construction {bic,aic,aicc}	|
 |-b             | int	                       |500	 	 									| number of bootstrap replicates for raxml-ng  			|	
 	       		     		
      		
@@ -203,9 +202,10 @@ a) Run step 4 with input file MSA.fa, nucleotide, output files prefix "tree1", 2
 8. treeConstruction/: constructed tree files
 
 ## References
-1. Alexey M Kozlov, Diego Darriba, Tomáš Flouri, Benoit Morel, Alexandros Stamatakis, RAxML-NG: a fast, scalable and user-friendly tool for maximum likelihood phylogenetic inference, Bioinformatics, Volume 35, Issue 21, 1 November 2019, Pages 4453–4455
-2. Darriba, D., Posada, D., Kozlov, A. M., Stamatakis, A., Morel, B., & Flouri, T. (2020). ModelTest-NG: a new and scalable tool for the selection of DNA and protein evolutionary models. Molecular Biology and Evolution, 37(1), 291-294. doi.org/10.1093/molbev/msz189
-3. Flouri T., Izquierdo-Carrasco F., Darriba D., Aberer AJ, Nguyen LT, Minh BQ, von Haeseler A., Stamatakis A. (2014) The Phylogenetic Likelihood Library. Systematic Biology, 64(2): 356-362. doi:10.1093/sysbio/syu084
-4. Kazutaka Katoh, Kazuharu Misawa, Kei‐ichi Kuma, Takashi Miyata, MAFFT: a novel method for rapid multiple sequence alignment based on fast Fourier transform, Nucleic Acids Research, Volume 30, Issue 14, 15 July 2002, Pages 3059–3066
-5. Lechner et al (2011). Proteinortho: Detection of (Co-)Orthologs in Large-Scale Analysis. BMC Bioinformatics 2011 Apr 28;12(1):124.
-6. Tan, J.L., Khang, T.F., Ngeow, Y.F. et al. A phylogenomic approach to bacterial subspecies classification: proof of concept in Mycobacterium abscessus. BMC Genomics 14, 879 (2013). https://doi.org/10.1186/1471-2164-14-879
+1. Buchfink B, Reuter K, Drost HG, "Sensitive protein alignments at tree-of-life scale using DIAMOND", Nature Methods 18, 366–368 (2021). https://doi.org/10.1038/s41592-021-01101-x
+2. Darriba, Di. et.al. (2020). ModelTest-NG: A New and Scalable Tool for the Selection of DNA and Protein Evolutionary Models. Molecular Biology and Evolution, 37, 291-294. https://doi.org/10.1093/molbev/msz189
+3. Katoh, K. et.al. (2002). MAFFT: A novel method for rapid multiple sequence alignment based on fast Fourier transform. Nucleic Acids Research, 30, 3059-3066. https://doi.org/10.1093/nar/gkf436
+4. Kozlov, A. M. et.al. (2019). RAxML-NG: A fast, scalable and user-friendly tool for maximum likelihood phylogenetic inference. Bioinformatics, 35, 4453-4455. https://doi.org/10.1093/bioinformatics/btz305
+5. Lechner, M. et.al. (2011). Proteinortho: Detection of (Co-)orthologs in large-scale analysis. BMC Bioinformatics, 12, 124. https://doi.org/10.1186/1471-2105-12-124
+6. Suyama, M. et.al. (2006). PAL2NAL: Robust conversion of protein sequence alignments into the corresponding codon alignments. Nucleic Acids Research, 34, W609-W612. https://doi.org/10.1093/nar/gkl315
+7. Tan, J. L. et.al. (2013). A phylogenomic approach to bacterial subspecies classification: Proof of concept in Mycobacterium abscessus. BMC Genomics, 14, 879. https://doi.org/10.1186/1471-2164-14-879
