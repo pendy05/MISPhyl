@@ -551,7 +551,10 @@ def treeconstruction():
 if __name__ == "__main__":
 	#reset the permission of dependencies
 	os.system("chmod 775 ./dependencies/*")
-	
+	#untar mafft,diamond, modeltest-ng-static
+	os.system("tar xvf ./dependencies/mafft-7.490-linux.tgz")
+	os.system("tar zxvf ./dependencies/diamond-linux64.tar.gz")
+	os.system("tar zxvf ./dependencies/modeltest-ng-0.1.7-static.tar.gz")
 	if args.step == 0 and args.codon: #all steps are chosen with codon alignment
 		proteinextraction()
 		concatenation()
