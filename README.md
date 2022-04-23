@@ -1,4 +1,4 @@
-# MISPhyl (Mutual Information Supermatrix Phylogenomic) Pipeline
+# MISPhyl (Mutual Information Supermatrix Phylogenomics) Pipeline
 Phylogenomics analyses are commonly applied to answer various research questions pertaining to relationships of species and events on Earth. Although phylogenomic tree reconstructions have been widely used in research, it is still a great challenge for many researchers to deal with its multi-step technical procedure and data handling, especially on genomic data. Herein we present MISPhyl, a user-friendly pipeline which utilises supermatrix-based procedure to yield phylogenomic tree. While a supermatrix phylogenomic tree aims to amplify phylogenetic signals, there are chances to include phylogenetic noises into the tree reconstruction. To address the issue, this automated pipeline has also implemented a Mutual Information (MI) approach to perform systematic selection of genes with optimal phylogenetic signals for phylogenomic inference. The MI approach has been previously discussed for its ability to generate a reliable phylogenomic tree and identify species-specific markers in Mycobacterium abscessus Complex (Tan et al., 2013).
 
 
