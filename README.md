@@ -73,15 +73,15 @@ Ensure there is NO '_', underscore in your species name and accession ID.
 ```
   a) Run in default mode which accepts input files as amino acid sequence and utilize Diamond as blast program
 ```
-	$python3 MISPhyl.py -e faa -f aa -u
+	$python3 MISPhyl.py -f faa -i aa
 ```
   b) Run with nucleotide input files, blastn program and mutual information mode ON (ensure blastn is present in your system)
 ```	
-	$python3 MISPhyl.py -e fna -f nt -d blastn
+	$python3 MISPhyl.py -f fna -i nt -algo blastn
 ```
   c) Run codon-based alignment with mutal information mode ON. Amino acid files with .faa file extension in inputfolder/ and nucleotide files in ntfolder/.
 ```
-	$python3 MISPhyl.py -o -f aa -e faa
+	$python3 MISPhyl.py -codon -i aa -f faa 
 ```
 
 Note: Codon Alignment (AA and corresponding NT files MUST have same filename, file extension need not to be)
@@ -95,7 +95,7 @@ Note: Codon Alignment (AA and corresponding NT files MUST have same filename, fi
 Example:<br>
 a) Run step 1 with quiet mode ON and prefix for proteinortho as "project1"
 ```
-	$python3 MISPhyl.py -s 1 -q -p project1 -e fa -f aa -u
+	$python3 MISPhyl.py -s 1 -p project1 -f fa -i aa
 ```
 3.Slight difference if codon based alignment is ENABLED, ENSURE:
 <br>  i) Same IDs are used in both protein and nucleotide input files <br>
@@ -111,11 +111,11 @@ a) Run step 1 with quiet mode ON and prefix for proteinortho as "project1"
 <br>Example:
 <br>a) Run all steps with codon alignment, mutual information mode ON.
 ```
-	$python3 MISPhyl.py -e fasta -f aa -o -c 4
+	$python3 MISPhyl.py -f fasta -i aa -codon -cpus 4
 ```
 <br>b) Run step 1 to step 2 with codon alignment, mutual information mode ON
 ```
-	$python3 MISPhyl.py -e fasta -f aa -o -c 4 -s 1
+	$python3 MISPhyl.py -f fasta -i aa -codon -cpus 4 -s 1
 ```
 
 
@@ -141,11 +141,11 @@ a) Run step 1 with quiet mode ON and prefix for proteinortho as "project1"
 3.Example:
 a) Mutual information mode ON with 10 median ranked genes and a aligned output file named aligned.fa 
 ```
-	$python3 MISPhyl.py -s 3 -u -n aligned.fa -t 10
+	$python3 MISPhyl.py -s 3 -msa aligned.fa -r 10
 ```
 b) Step 3 with codon alignment and mutual information mode ON
 ```
-	$python3 MISPhyl.py -s 3 -o
+	$python3 MISPhyl.py -s 3 
 ```
 
 
@@ -156,7 +156,7 @@ If you run all the steps from 1 to 4, you need not to worry for this. Partition.
 3. Example:<br>
 a) Run step 4 with input file MSA.fa, nucleotide, output files prefix "tree1", 2 cpus, boostrapping of 250 and a partition file named "partition.txt".
 	```
-	$python3 MISPhyl.py -s 4 -r tree1 -c 2 -b 250 -n MSA.fa -f nt -o partition.txt
+	$python3 MISPhyl.py -s 4 -x tree1 -cpus 2 -b 250 -msa MSA.fa -i nt -partition partition.txt
 	```
 
 
@@ -169,8 +169,9 @@ a) Run step 4 with input file MSA.fa, nucleotide, output files prefix "tree1", 2
 |-f             | string                       |faa 	 				 					| input file extension {fasta,faa,fna,fa}   			|
 |-i             | string                       |N/A 	 				 					| type of input sequences {protein:aa / nucleotide:nt}	|
 |-mi             | N/A                          |ON		 				 					| mutual information : select optimal phylogenetical signal genes for phylogenomic interference	    |
+|-r             |int                         |50		 				 					|  number of median-ranked range genes in MI_genes.csv to be concatenated  |
 |-p             | int	                       |myproject	 	 		 					| prefix for proteinOrtho resulting file names   		|
-|-f             | string                       |faa 	 				 					| input file extension {fasta,faa,fna,fa}   			|
+|-codon            | N/A                     |OFF	 				 					| codon based alignment, translate protein alignments to nucleotide alignments   			|
 |-algo             | string                       |protein [diamond]<br> nucleotide [blastn] 	| blast program available for proteinOrtho 				|
 |-path             | string                       |./dependencies/	 							| binpath for proteinOrtho blast program selection	    |
 |-msa             | string	                   |MSA.fa	 	 								| multiple sequence alignment output filename in FASTA format  |	
@@ -179,7 +180,8 @@ a) Run step 4 with input file MSA.fa, nucleotide, output files prefix "tree1", 2
 |-n             | string                       |modeltest 	 								| modelTest-NG output file prefix   					|
 |-x             | string                       |T1 	 										| prefix for raxml-ng output files 						|
 |-model             | string                       |bic		 								    | model selection for tree construction {bic,aic,aicc}	|
-|-b             | int	                       |500	 	 									| number of bootstrap replicates for raxml-ng  			|	
+|-b             | int	                       |500	 	 									| number of bootstrap replicates for raxml-ng  			|
+|-t             | N/A	                       |ON	 	 									| Have minimum of four input files; required for tree construction  			|
 	       		     		
      		
 
